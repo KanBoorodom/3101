@@ -1,0 +1,44 @@
+import copy 
+a = [   [4,-2,1],
+        [-3,-1,4],
+        [1,-1,3]
+    ]
+b = [15,8,13]
+
+aux = copy.deepcopy(a)
+for i in range(len(aux)):
+    aux[i].append(b[i])
+print(aux)
+
+for i in range(len(a[0])): #Row size ทำแค่ภายใน a ไม่วิ่งเกินไป b
+    for j in range(len(aux)): #Column size วิ่งลงตาม column 
+        if(j == i): #ตำแหน่่งที่ j == i คือเส้นทแยงมุม
+            findMax = []
+            for k in range(len(a[0])):
+                findMax.append(a[k][j])
+            maxIndex = findMax.index(max(findMax))  #ถ้าค่าตัวเบขซ้ำกันตำแหน่ง max จะเป็นตำแหน่งของตัวแรก
+            if(maxIndex > j):
+                temp = aux[j]
+                aux[j] = aux[maxIndex]
+                aux[maxIndex] = temp
+            divide = aux[j][i] #ตัวหารเป็นหนึ่ง
+            for k in range(len(aux[0])): #ตอนหารเป็นหนึ่งต้องหารทั้ง row
+                aux[j][k] = round(aux[j][k] / divide ,2)
+        if(j > i):
+            m = aux[j][i]
+            for k in range(len(aux[0])):
+                aux[j][k] = round(aux[j][k] - (m * aux[i][k]),2)
+print(aux)
+
+for i in range(len(a[0])-1,-1,-1):
+    for j in range(len(aux)-1,-1,-1):
+        if(j < i): #ทำแถวบนเส้นทแยงมุม แต่ไม่ทำแถวคำตอบ
+            m = aux[j][i]
+            for k in range(len(aux[0])): #j row k column #-2 เพื่อไม่รวม column คำตอบ
+                aux[j][k] = round(aux[j][k] - (m * aux[i][k]),2)
+
+print(aux)
+
+
+for i in range(len(aux)):
+    print(f'ANSWER: {aux[i][len(aux[0])-1]}')
